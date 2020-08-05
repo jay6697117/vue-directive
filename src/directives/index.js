@@ -1,3 +1,4 @@
+//引入
 import copy from './src/copy';
 import emoji from './src/emoji';
 import longpress from './src/longpress';
@@ -8,7 +9,8 @@ import color from './src/color';
 import lazyLoad from './src/lazyLoad';
 import typing from './src/typing';
 import clickOutside from './src/clickOutside';
-// 自定义指令
+
+// 自定义指令集合
 const directives = {
   copy,
   emoji,
@@ -19,7 +21,14 @@ const directives = {
   color,
   lazyLoad,
   typing,
-  'click-outside': clickOutside
+  clickOutside
 };
+
 // 这种写法可以批量注册指令
-export default directives;
+export default {
+  install(Vue) {
+    Object.keys(directives).forEach(key => {
+      Vue.directive(key, directives[key]);
+    });
+  }
+};

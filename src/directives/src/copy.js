@@ -9,7 +9,7 @@ const vCopy = { // 名字爱取啥取啥
     el.handler = () => {
       if (!el.$value) {
         // 值为空的时候，给出提示。可根据项目UI仔细设计
-        alert('无复制内容')
+        alert('无复制内容222')
         return
       }
       // 动态创建 textarea 标签
@@ -27,7 +27,7 @@ const vCopy = { // 名字爱取啥取啥
       // textarea.setSelectionRange(0, textarea.value.length);
       const result = document.execCommand('Copy')
       if (result) {
-        alert('复制成功')
+        alert('复制成功111')
       }
       document.body.removeChild(textarea)
     }

@@ -2,13 +2,10 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import store from './store';
-import directives from './directives';
-console.log('directives :>> ', directives); // 测试
-Vue.config.productionTip = false;
+import directives from './directives/index';
+Vue.use(directives);
 
-Object.keys(directives).forEach(key => {
-  Vue.directive(key, directives[key]);
-});
+Vue.config.productionTip = false;
 
 new Vue({
   router,
