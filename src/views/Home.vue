@@ -13,6 +13,7 @@
 
     <HelloWorld msg="Welcome to Your Vue.js App" />
     <input class="focus-input" type="text" v-typing />
+
     <div style="width:200px; margin:0 auto;">
       <Select />
       <div style="padding:10px 0;">
@@ -46,6 +47,7 @@
           <span>{{ loading ? 'Loading...' : 'Click Me' }}</span>
         </Button>
       </div>
+
       <Modal :isClosed="isClosed" @closeModal="closeModalHandle">
         <div style="padding:5px 0">Modal default1</div>
         <div style="padding:5px 0">Modal default1</div>

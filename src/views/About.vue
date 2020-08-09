@@ -22,7 +22,6 @@
     <div class="text-area">
       <textarea v-model="copyText" rows="10" cols="30" placeholder="请输入内容"></textarea>
     </div>
-
     <button v-copy="copyText" class="copy-btn">copy</button>
   </div>
 </template>

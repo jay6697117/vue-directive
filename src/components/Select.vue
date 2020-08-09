@@ -1,16 +1,32 @@
 <template>
   <div class="select-search">
-    <div class="select-header" @click="isExpand=!isExpand">
-      <input type="text" autocomplete="off" readonly :placeholder="placeholder" :value="placeholderValue" @keydown.down.prevent="selectChildWidthArrowDown" @keydown.up.prevent="selectChildWidthArrowUp" @keydown.enter="selectChildWidthEnter">
-      <i class="fzicon " :class="isExpand?'fz-ad-jiantou1':'fz-ad-jiantou'"></i>
+    <div class="select-header" @click="isExpand = !isExpand">
+      <input
+        type="text"
+        autocomplete="off"
+        readonly
+        :placeholder="placeholder"
+        :value="placeholderValue"
+        @keydown.down.prevent="selectChildWidthArrowDown"
+        @keydown.up.prevent="selectChildWidthArrowUp"
+        @keydown.enter="selectChildWidthEnter"
+      />
+      <i class="fzicon " :class="isExpand ? 'fz-ad-jiantou1' : 'fz-ad-jiantou'"></i>
     </div>
     <div class="select-body" v-if="isExpand">
       <transition name="el-fade-in-linear" mode="out-in">
         <div class="typeahead-filter" v-show="typeaheadData">
           <transition-group tag="ul" name="el-fade-in-linear">
-            <li v-for="(item,index) in typeaheadData " :key="index" :class="item.active ? 'active':''" @mouseenter="setActiveClass(index)" @mouseleave="setActiveClass(index)" @click="selectChild(index)">
+            <li
+              v-for="(item, index) in typeaheadData"
+              :key="index"
+              :class="item.active ? 'active' : ''"
+              @mouseenter="setActiveClass(index)"
+              @mouseleave="setActiveClass(index)"
+              @click="selectChild(index)"
+            >
               <a href="javascript:;">
-                {{item.text}}
+                {{ item.text }}
               </a>
             </li>
           </transition-group>
@@ -21,155 +37,140 @@
 </template>
 
 <script>
-  export default {
-    name: 'selectSearch',
-    data: function () {
-      return {
-        placeholderValue: '',// 给看到选择内容的
-        isExpand: false,
-        searchVal: '', // 搜索关键字
-        resultVal: '', // 保存搜索到的值
-        searchList: [], //保存过滤的结果集
-        currentIndex: -1, // 当前默认选中的index,
-      }
-    },
-    computed: {
-      typeaheadData () {
-        let temp = [];
-        if (this.searchVal === '') {
-          return this.mapData;
-        } else {
-          // this.currentIndex = -1; // 重置特殊情况下的索引
-          this.changeCurrentIndex(); // 重置特殊情况下的索引
-          this.mapData.forEach(item => {
-            item.active = false; // 取消高亮
-            if (item.text.indexOf(this.searchVal.toLowerCase().trim()) !== -1) {
-              temp.push(item)
-            }
-          })
-          return temp;
-        }
-      }
-    },
-    props: {
-      placeholder: {
-        type: String,
-        default: '--请选择--'
-      },
-      mapData: {
-        type: Array,
-        default: function () {
-          return [
-            {
-              text: 'wofsdf',
-              value: 0
-            },
-            {
-              text: '我是技术渣1',
-              value: 1
-            },
-            {
-              text: '我是技术渣2',
-              value: 2
-            },
-            {
-              text: '我是天坑',
-              value: 3
-            },
-            {
-              text: '我是天坑,分身乏术',
-              value: 4
-            },
-            {
-              text: '我是天坑2,分身乏术',
-              value: 5
-            },
-            {
-              text: '我是天坑3,分身乏术',
-              value: 6
-            }
-          ]
-        }
-      }
-    },
-    methods: {
-      changeCurrentIndex () {
-        this.currentIndex = -1;  // 重置特殊情况下的索引
-      },
-      resetDefaultStatus () {
-        this.searchVal = '';
-        this.resultVal = '';
-        this.currentIndex = -1;
-        this.typeaheadData.forEach(item => {
-          this.$set(item, 'active', false);
-        })
-      },
-      setActiveClass (index) { // 设置样式活动类
-        this.mapData.forEach((item, innerIndex) => {
-          if (index === innerIndex) {
-            this.$set(item, 'active', true);
-            this.currentIndex = index;  // 这句话是用来修正index,,就是键盘上下键的索引,不然会跳位
-          } else {
-            this.$set(item, 'active', false)
+export default {
+  name: 'selectSearch',
+  data: function() {
+    return {
+      placeholderValue: '', // 给看到选择内容的
+      isExpand: false,
+      searchVal: '', // 搜索关键字
+      resultVal: '', // 保存搜索到的值
+      searchList: [], //保存过滤的结果集
+      currentIndex: -1 // 当前默认选中的index,
+    };
+  },
+  computed: {
+    typeaheadData() {
+      let temp = [];
+      if (this.searchVal === '') {
+        return this.mapData;
+      } else {
+        // this.currentIndex = -1; // 重置特殊情况下的索引
+        this.changeCurrentIndex(); // 重置特殊情况下的索引
+        this.mapData.forEach(item => {
+          item.active = false; // 取消高亮
+          if (item.text.indexOf(this.searchVal.toLowerCase().trim()) !== -1) {
+            temp.push(item);
           }
-        })
-      },
-      selectChildWidthArrowDown () {
-        // 判断index选中子项
-        if (this.currentIndex < this.typeaheadData.length) {
-          this.currentIndex++;
-          this.typeaheadData.forEach((item, index) => {
-            this.currentIndex === index ? this.$set(item, 'active', true) : this.$set(item, 'active', false);
-          })
-        }
-      },
-      selectChildWidthArrowUp () {
-        // 判断index选中子项
-        if (this.currentIndex > 0) {
-          this.currentIndex--;
-          this.typeaheadData.forEach((item, index) => {
-            this.currentIndex === index ? this.$set(item, 'active', true) : this.$set(item, 'active', false);
-          })
-        }
-      },
-      selectChildWidthEnter () {
-        // 若是结果集只有一个,则默认选中
-        if (this.typeaheadData.length === 1) {
-          this.searchVal = this.typeaheadData[0].text;
-          this.resultVal = this.typeaheadData[0].value;
-          this.placeholderValue = this.typeaheadData[0].text;
-          this.isExpand = false;
-          this.$emit('selectValue', { text: this.searchVal, value: this.resultVal })
-        } else {
-          // 若是搜索的内容完全匹配到项内的内容,则默认选中
-          this.typeaheadData.forEach(item => {
-            if (this.searchVal === item.text || item.active === true) {
-              this.searchVal = item.text;
-              this.placeholderValue = item.text;
-              this.resultVal = item.value;
-              this.isExpand = false;
-              this.$emit('selectValue', { text: this.searchVal, value: this.resultVal })
-            }
-          })
-        }
-        this.resetDefaultStatus();
-      },
-      selectChild (index) {
-        // 鼠标点击选择子项
-        this.mapData.forEach((item, innerIndex) => {
-          if (index === innerIndex || item.active) {
-            this.searchVal = item.text;
-            this.resultVal = item.value;
-            this.placeholderValue = item.text;
-            this.isExpand = false;
+        });
+        return temp;
+      }
+    }
+  },
+  props: {
+    placeholder: {
+      type: String,
+      default: '--请选择--'
+    },
+    mapData: {
+      type: Array,
+      default: function() {
+        return [
+          {
+            text: '我是技术渣1',
+            value: 1
+          },
+          {
+            text: '我是技术渣2',
+            value: 2
+          },
+          {
+            text: '我是技术渣3',
+            value: 3
           }
+        ];
+      }
+    }
+  },
+  methods: {
+    changeCurrentIndex() {
+      this.currentIndex = -1; // 重置特殊情况下的索引
+    },
+    resetDefaultStatus() {
+      this.searchVal = '';
+      this.resultVal = '';
+      this.currentIndex = -1;
+      this.typeaheadData.forEach(item => {
+        this.$set(item, 'active', false);
+      });
+    },
+    setActiveClass(index) {
+      // 设置样式活动类
+      this.mapData.forEach((item, innerIndex) => {
+        if (index === innerIndex) {
+          this.$set(item, 'active', true);
+          this.currentIndex = index; // 这句话是用来修正index,,就是键盘上下键的索引,不然会跳位
+        } else {
           this.$set(item, 'active', false);
-        })
+        }
+      });
+    },
+    selectChildWidthArrowDown() {
+      // 判断index选中子项
+      if (this.currentIndex < this.typeaheadData.length) {
+        this.currentIndex++;
+        this.typeaheadData.forEach((item, index) => {
+          this.currentIndex === index ? this.$set(item, 'active', true) : this.$set(item, 'active', false);
+        });
+      }
+    },
+    selectChildWidthArrowUp() {
+      // 判断index选中子项
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.typeaheadData.forEach((item, index) => {
+          this.currentIndex === index ? this.$set(item, 'active', true) : this.$set(item, 'active', false);
+        });
+      }
+    },
+    selectChildWidthEnter() {
+      // 若是结果集只有一个,则默认选中
+      if (this.typeaheadData.length === 1) {
+        this.searchVal = this.typeaheadData[0].text;
+        this.resultVal = this.typeaheadData[0].value;
+        this.placeholderValue = this.typeaheadData[0].text;
+        this.isExpand = false;
         this.$emit('selectValue', { text: this.searchVal, value: this.resultVal });
-        this.resetDefaultStatus();
-      },
+      } else {
+        // 若是搜索的内容完全匹配到项内的内容,则默认选中
+        this.typeaheadData.forEach(item => {
+          if (this.searchVal === item.text || item.active === true) {
+            this.searchVal = item.text;
+            this.placeholderValue = item.text;
+            this.resultVal = item.value;
+            this.isExpand = false;
+            this.$emit('selectValue', { text: this.searchVal, value: this.resultVal });
+          }
+        });
+      }
+      this.resetDefaultStatus();
+    },
+    selectChild(index) {
+      // 鼠标点击选择子项
+      this.mapData.forEach((item, innerIndex) => {
+        if (index === innerIndex || item.active) {
+          this.searchVal = item.text;
+          this.resultVal = item.value;
+          this.placeholderValue = item.text;
+          this.isExpand = false;
+        }
+        this.$set(item, 'active', false);
+      });
+      this.$emit('selectValue', { text: this.searchVal, value: this.resultVal });
+      this.resetDefaultStatus();
     }
   }
+};
 </script>
 
 <style scoped>
